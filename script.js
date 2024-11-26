@@ -45,25 +45,43 @@ delay('Good morning!', 2000, () => {
 // Once the user is retrieved, use their id to fetch their posts from https://jsonplaceholder.typicode.com/posts?userId=1.
 // Use callbacks within a .then() chain to handle the results and log them to the console.
 
+// the userId is passed as an argument to dynamically insert if into the url 
 function fetchUser(userId, callback) {
     fetch(`https://jsonplaceholder.typicode.com/users/${userId}`)
+   
+    // after the fetch request completes it returns a response object
+    // this is handle in the first then() block
         .then(response => {
+           
+            // response.ok is a boolean that is true if the HTTP status code is in the range 200-299(success)
+            // if false it will throw an error (t.ex 404 not found)
             if (!response.ok) {
                 throw new Error(`Failed to fetch user: ${response.status}`);
             }
+
+            // converts the raw response data into a JS object
+            // parsing the JSON body from the server 
             return response.json();
         })
+
+        // the parsed data is available in the user variable
         .then(user => {
             console.log('User retrieved!:', user);
+            
+            // after retrieving the user we pass their ID to the callback
+            // this connects the first function to the next one
             if (callback) {
                 callback(user.id);
             }
         })
+
+        // if any errors occur this block runs (t.ex network failure, bad url etc.)
         .catch(error => {
             console.log('Error fetching user:', error);
         });
 } 
 
+// the userId from the callback is used to fetch all posts beloning to the user
 function fetchPosts(userId) {
     fetch(`https://jsonplaceholder.typicode.com/posts?userId=${userId}`)
         .then(response => {
@@ -80,6 +98,9 @@ function fetchPosts(userId) {
         });
 }
 
+// fecthes the user with the ID 1
+// once the user is retrieved it calls fetchPost() 
+// and passes the user.id as an argument
 fetchUser(1, fetchPosts);
 
 // Tips:
