@@ -68,12 +68,12 @@ function fetchPosts(userId) {
     fetch(`https://jsonplaceholder.typicode.com/posts?userId=${userId}`)
         .then(response => {
             if (!response.ok) {
-                throw new Error(`Failed to fetch post: ${response.status}`);
+                throw new Error(`Failed to fetch posts: ${response.status}`);
             }
             return response.json();
         })
-        .then(post => {
-            console.log(`Post by: ${userId}`, posts);
+        .then(posts => {
+            console.log(`Posts by: ${userId}`, posts);
         })
         .catch(error => {
             console.log('Error fetching posts:', error);
