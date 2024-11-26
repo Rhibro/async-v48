@@ -47,7 +47,7 @@ delay('Good morning!', 2000, () => {
 
 // the userId is passed as an argument to dynamically insert if into the url 
 function fetchUser(userId, callback) {
-    fetch(`https://jsonplaceholder.typicode.com/users/${userId}`)
+    fetch(`https://jsonplaceholder.typicode.com/users/${userId}`) //https://jsonplaceholder.typicode.com/users/${userId}
    
     // after the fetch request completes it returns a response object
     // this is handle in the first then() block
@@ -109,6 +109,7 @@ fetchUser(1, fetchPosts);
 
 // ------------------------------------------
 // Exercise 3: Handling Errors in Asynchronous Code with fetch() (Hard)
+// Done. 
 
 // Task:
 // Modify Exercise 2 to include robust error handling.
@@ -124,6 +125,32 @@ fetchUser(1, fetchPosts);
 // When the button is clicked, fetches a random user from https://jsonplaceholder.typicode.com/users.
 // Displays the user's name and email on the page.
 // Use fetch() and manage asynchronous behavior with .then() and callbacks within them.
+
+// trigger function with an event listener
+document.getElementById('btn').addEventListener('click', function() {
+    fetch(`https://jsonplaceholder.typicode.com/users/`)
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`Failed to fetch posts: ${response.status}`);
+        }
+        return response.json();
+    })
+
+    // we parsed the JSON data above to an array 
+    .then(users => {
+        // this generates a random number between 0 and the length of users in the array
+          // Math.floor() rounds down the number to the nearest whole number
+        const randomIndex = Math.floor(Math.random() * users.length);
+        // this retrieves the user object at the randomly generated index
+        const user = users[randomIndex];
+        // display the user's name and email
+        document.getElementById('display').innerHTML = `Name: ${user.name}, Email: ${user.email}`;
+    })
+    .catch(error => {
+        console.error('Error Fetching user:', error);
+        document.getElementById('display').innerHTML = 'Failed to fetch user...'
+    });
+});
 
 // Goal:
 // Apply your knowledge in a practical application.
