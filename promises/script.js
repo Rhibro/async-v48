@@ -51,21 +51,33 @@ randomNumber
 // Goal:
 // Learn to chain Promises to handle complex asynchronous flows.
 
+// this function takes one parameter: userID
+// userId will be used to fetch data for a specific user & their posts 
 function getUserAndPosts(userId) {
     fetch(`https://jsonplaceholder.typicode.com/users/${userId}`)
-        
+    
+    // handle response, checks if HTTP status is good
     .then(response => {
         if(!response.ok) {
             throw new Error(`Failed to fetch user: ${response.status}`);
         }
+
+        // if no errors the converts to a JS object or array (parsed data)
         return response.json();
     })
 
+    // parsed data is passed to this .then() block
     .then(user => {
+
+        // the name of the user is extracted & displayed 
         document.getElementById('displayTwo').innerHTML = `User retrieved!: ${user.name}`;
+
+        // a new fetch call is initiated to retrieve posts for the given userId
+        // the url is constructed for posts 
         return fetch(`https://jsonplaceholder.typicode.com/posts?userId=${userId}`);
     })
 
+    // checks the status of the HTTP above 
     .then(response => {
         if (!response.ok) {
             throw new Error(`Failed to fetch posts: ${response.status}`);
@@ -73,20 +85,27 @@ function getUserAndPosts(userId) {
         return response.json(); 
     })
 
+    // displays posts
     .then(posts => {
         const display = document.getElementById('displayTwo');
+        
+        // loops through posts
         posts.forEach(post => {
             console.log(`- ${post.title}`);
+
+            // added a + and <br> so we can display all the posts titles
             display.innerHTML += `<br>- ${post.title}`;
         });
     })
 
+    // if any part od the promise chain fails the .catch() block is triggered
     .catch(error => {
         console.log('Error fetching user:', error);
     });
 }
 
-getUserAndPosts(2);
+// the number represents the userId :)
+getUserAndPosts(1);
 
 
 // -----------------------------------------------
