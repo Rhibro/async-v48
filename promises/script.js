@@ -91,7 +91,7 @@ function getUserAndPosts(userId) {
         
         // loops through posts
         posts.forEach(post => {
-            console.log(`- ${post.title}`);
+            // console.log(`- ${post.title}`);
 
             // added a + and <br> so we can display all the posts titles
             display.innerHTML += `<br>- ${post.title}`;
@@ -124,10 +124,52 @@ getUserAndPosts(1);
 // Goal:
 // Understand how to effectively manage multiple asynchronous operations simultaneously using Promises.
 
+// this function fetches and logs titles from multiple URLs using Promise.all()
+async function fecthAndLog() {
+
+    // define URLs
+    const urls = [
+        'https://jsonplaceholder.typicode.com/posts/1',
+        'https://jsonplaceholder.typicode.com/posts/2',
+        'https://jsonplaceholder.typicode.com/posts/3'
+    ];
+
+    try {
+        //  use Promise.all() to fetch all posts in parallel
+        const responses = await Promise.all(urls.map(url => fetch(url)));
+
+        // map over responses to extract JSON data
+        const posts = await Promise.all(responses.map(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        }));
+
+        // log titles
+        posts.forEach(post => {
+            const display = document.getElementById('displayThree');
+            display.innerHTML += `<br>- ${post.title}`;
+        });
+    }
+
+    catch (error) {
+        // Handle errors
+        console.error("Error fetching posts:", error);
+}}
+
+fecthAndLog();
+
 // -----------------------------------------------
 // Exercise 4: Advanced Code-Along: Build a Complex Asynchronous Flow with Promises (Extra Hard)
 
 // Description:
-// Build an application that fetches user data, their posts, and comments on those posts, all using Promises. The focus is on managing complex chains and error handling.
+// Build an application that fetches user data, their posts, and comments on those posts, all using Promises. 
+// The focus is on managing complex chains and error handling.
 
-// -----------------------------------------------
+async function displayUserData () {
+    
+}
+
+
+
