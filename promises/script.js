@@ -168,8 +168,34 @@ fecthAndLog();
 // The focus is on managing complex chains and error handling.
 
 async function displayUserData () {
-    
-}
+    const url = `https://restcountries.com/v3.1/region/europe`;
+
+    try {
+
+        //  use Promise.all() to fetch all posts in parallel
+        const responses = await Promise.all(url.map(url => fetch(url)));
+
+        // map over responses to extract JSON data
+        const places = await Promise.all(responses.map(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        }));
+
+        // log titles
+        places.forEach(place => {
+            const display = document.getElementById('displayFive');
+            display.innerHTML += `<br>- ${place.region}`;
+            console.log(`${place.region}`);
+        });
+
+    } catch(error) {
+         // Handle errors
+         console.error("Error fetching posts:", error);
+        }
+    }
+
 
 
 
